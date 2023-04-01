@@ -10,38 +10,38 @@ from .utils import hav, arguv, spherToCart, isSpherical, throw, objectHasKey
   @abstract n-norm of a number
  
   @param {Array} arr
-  @param {Number} n
+  @param {Number} p
   @return {Number}
 '''
-def nNorm(arr, n):
-  nNormFun=lambda dist, elem: dist + abs(elem) ** n
-  redSum = reduce(nNormFun, arr, 0)
+def pNorm(arr, p):
+  pNormFun=lambda dist, elem: dist + abs(elem) ** p
+  redSum = reduce(pNormFun, arr, 0)
 
-  return redSum ** (1 / n)
+  return redSum ** (1 / p)
 
 '''
   @abstract returns the n-norm of a vector
  
   @param {Array} coordinate_1
   @param {Array} coordinate_2
-  @param {Number} n
+  @param {Number} p
   @return {Number}
 '''
-def nNormDistance(coordinate_1, coordinate_2, n):
-  if (n < 1):
+def pNormDistance(coordinate_1, coordinate_2, p):
+  if (p < 1):
     throw("The exponent n must be a number greater or equal to 1!")
 
   diffAbsFun=lambda coord_1, coord_2: abs(coord_1 - coord_2)
   coordiff = map(diffAbsFun, zip(coordinate_1, coordinate_2))
 
-  return max(coordiff) if n == Inf else nNorm(coordiff, n)
+  return max(coordiff) if p == Inf else pNorm(coordiff, p)
 
 '''
   @abstract returns the central angle between two coordinate points on a sphere
  
   @param {Array} coordinate_1
   @param {Array} coordinate_2
-  @param {Number} n
+  @param {Number} p
   @return {Number}
 '''
 def sphereCentralAngle(coordinate_1, coordinate_2):
@@ -67,7 +67,7 @@ def centralAngle(vector_1, vector_2, R):
  
   @param {Array} coord_1
   @param {Array} coord_2
-  @param {Number} n
+  @param {Number} p
   @return {Number}
 '''
 def greatCircleDistance(coord_1, coord_2, R): 
@@ -93,11 +93,11 @@ def nSphereDistance(coord_1, coord_2, R):
   @param {Object} methodConfig
   @return {Number}
 '''
-def distance(coordinate_1, coordinate_2, method, methodConfig):
+def distance(coordinate_1, coordinate_2, method="pnorm", methodConfig={}):
   notification_message = "There must exist property '_placeholder_' on config argument 'methodConfig'!"
 
   
-  if(method=="nnorm"):
+  if(method=="pnorm"):
     exponent=-1
 
     if (not objectHasKey(methodConfig, "exponent")):
@@ -108,7 +108,7 @@ def distance(coordinate_1, coordinate_2, method, methodConfig):
     else:
       exponent = methodConfig.exponent
 
-    return nNormDistance(coordinate_1, coordinate_2, exponent)
+    return pNormDistance(coordinate_1, coordinate_2, exponent)
 
   elif(method=="sphere"):
     are_spherical = not isSpherical(coordinate_1) or not isSpherical(coordinate_2)
@@ -119,8 +119,17 @@ def distance(coordinate_1, coordinate_2, method, methodConfig):
         else nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)
       )
 
+  elif(method=="manhattan"):
+    return pNormDistance(coordinate_1, coordinate_2, 1)
+  
+  elif(method=="euclidean"):
+    return pNormDistance(coordinate_1, coordinate_2, 2)
+  
+  elif(method=="max"):
+    return pNormDistance(coordinate_1, coordinate_2, Inf)
+
   else:
-    throw("There are only available methods: ['n_norm', 'sphere']")
+    throw("There are only available methods: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']")
   
 
 '''
