@@ -86,7 +86,7 @@ echo-version: ## echo current package version
 bump-version: ## bump version to user-provided {patch|minor|major} semantic
 	poetry version $(v)
 	git add pyproject.toml
-	git commit -m "release/ tag v$(poetry version -s)"
+	git commit -m "release/ tag v$$(poetry version -s)"
 	git tag "v$$(poetry version -s)"
 	git push
 	git push --tags
