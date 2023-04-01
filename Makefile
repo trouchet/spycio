@@ -36,7 +36,6 @@ SPHINXBUILD   = python3 -msphinx
 PACKAGE_NAME = "spycio"
 PACKAGE_VERSION := poetry version -s
 
-COVERAGE_IGNORE_PATHS = "spycio/examples"
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -72,19 +71,10 @@ lint: clean ## perform inplace lint fixes
 	pre-commit run --all-files
 
 coverage: clean ## check code coverage quickly with the default Python
-	coverage run --source "$$PACKAGE_NAME" -m pytest
-	coverage report -m --omit="$$COVERAGE_IGNORE_PATHS"
+	coverage run --source "$(PACKAGE_NAME)" -m pytest
+	coverage report
 	coverage html
 	$(BROWSER) htmlcov/index.html
-
-docs: clean ## generate Sphinx HTML documentation, including API docs
-	poetry shell
-	sphinx-apidoc -o "docs/" "$$PACKAGE_NAME" "tests" "examples" "conftest.py"
-	$(MAKE) -C docs html
-	$(BROWSER) 'docs/_build/html/index.html'
-
-docs-watch: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$$DO_DOCS_HTML' -R -D .
 
 install: clean ## install the package to the active Python's site-packages
 	poetry shell
@@ -96,7 +86,7 @@ echo-version: ## echo current package version
 bump-version: ## bump version to user-provided {patch|minor|major} semantic
 	poetry version $(v)
 	git add pyproject.toml
-	git commit -m "release/ tag v$$(poetry version -s)"
+	git commit -m "release/ tag v$(poetry version -s)"
 	git tag "v$$(poetry version -s)"
 	git push
 	git push --tags
