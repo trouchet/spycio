@@ -1,4 +1,7 @@
 #!/usr/bin/env python
-import spycio
+from spycio import distance
 
-# Fill it!
+A=[0, 0]
+B=[1, 1]
+
+print(distance(A, B))
