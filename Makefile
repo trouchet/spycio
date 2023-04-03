@@ -62,7 +62,7 @@ test: ## run tests quickly with the default Python
 	poetry shell
 	pytest
 
-test-watch: ## run tests on watchdog mode
+watch: ## run tests on watchdog mode
 	poetry shell
 	ptw
 
@@ -95,6 +95,5 @@ bump-version: ## bump version to user-provided {patch|minor|major} semantic
 publish: clean ## build source and publish package
 	poetry publish --build
 
-release: ## release package on PyPI
-	bump-version v=$(v) 
-	$(MAKE) -C publish
+release: bump-version v=$(v) ## release package on PyPI 
+	poetry publish --build
