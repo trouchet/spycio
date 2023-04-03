@@ -1,10 +1,21 @@
 """Main module."""
-import numpy as np
-from numpy import max, abs, arcsin, sqrt, Inf
+from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf
 from functools import reduce
 from warnings import warn
 
-from .utils import hav, arguv, spherToCart, isSpherical, throw, objectHasKey
+from .utils import hav, spherToCart, isSpherical, throw, hasKey
+
+'''
+  @abstract vector argument based on n-norm
+ 
+  @param {Array} u
+  @param {Array} v
+  @param {Number} n
+  @return {Number}
+'''
+def arguv(u, v, n):
+  return arccos(dot(u, v) / (pNorm(u, n) * pNorm(v, n)))
+
 
 '''
   @abstract n-norm of a number
@@ -15,9 +26,7 @@ from .utils import hav, arguv, spherToCart, isSpherical, throw, objectHasKey
 '''
 def pNorm(arr, p):
   pNormFun=lambda dist, elem: dist + abs(elem) ** p
-  redSum = reduce(pNormFun, arr, 0)
-
-  return redSum ** (1 / p)
+  return reduce(pNormFun, arr, 0) ** (1 / p)
 
 '''
   @abstract returns the n-norm of a vector
@@ -31,8 +40,8 @@ def pNormDistance(coordinate_1, coordinate_2, p):
   if (p < 1):
     throw("The exponent n must be a number greater or equal to 1!")
 
-  diffAbsFun=lambda coord_1, coord_2: abs(coord_1 - coord_2)
-  coordiff = map(diffAbsFun, zip(coordinate_1, coordinate_2))
+  diffAbsFun=lambda coords: abs(coords[0] - coords[1])
+  coordiff=list(map(diffAbsFun, zip(coordinate_1, coordinate_2)))
 
   return max(coordiff) if p == Inf else pNorm(coordiff, p)
 
@@ -45,20 +54,28 @@ def pNormDistance(coordinate_1, coordinate_2, p):
   @return {Number}
 '''
 def sphereCentralAngle(coordinate_1, coordinate_2):
-  longitude_1 = coordinate_1[0]
-  longitude_2 = coordinate_2[0]
+  longitude_1=coordinate_1[0]
+  longitude_2=coordinate_2[0]
   
-  latitude_1 = coordinate_1[1]
-  latitude_2 = coordinate_2[1]
+  latitude_1=coordinate_1[1]
+  latitude_2=coordinate_2[1]
   
-  aux_1 = 1 - hav(latitude_1 - latitude_2) - hav(latitude_1 + latitude_2)
-  aux_2 = hav(longitude_2 - longitude_1)
-  aux_3 = hav(latitude_2 - latitude_1)
+  aux_1=1 - hav(latitude_1 - latitude_2) - hav(latitude_1 + latitude_2)
+  aux_2=hav(longitude_2 - longitude_1)
+  aux_3=hav(latitude_2 - latitude_1)
   
-  hav_theta = aux_3 + aux_2 * aux_1
+  hav_theta=aux_3 + aux_2 * aux_1
 
   return 2 * arcsin(sqrt(hav_theta))
 
+'''
+  @abstract returns the central angle between two coordinate points on a sphere
+ 
+  @param {Array} coordinate_1
+  @param {Array} coordinate_2
+  @param {Number} p
+  @return {Number}
+'''
 def centralAngle(vector_1, vector_2, R):
   return arguv(spherToCart(vector_1, R), spherToCart(vector_2, R), 2)
 
@@ -94,30 +111,31 @@ def nSphereDistance(coord_1, coord_2, R):
   @return {Number}
 '''
 def distance(coordinate_1, coordinate_2, method="pnorm", methodConfig={}):
-  notification_message = "There must exist property '_placeholder_' on config argument 'methodConfig'!"
-
+  notification_message="There must exist property '_placeholder_' on config argument 'methodConfig'!"
   
   if(method=="pnorm"):
     exponent=-1
 
-    if (not objectHasKey(methodConfig, "exponent")):
+    if (hasKey(methodConfig, "exponent")):
+      exponent=methodConfig['exponent']
+    else:
       emsg=notification_message.replace("_placeholder_", "radius")
       warn(emsg, UserWarning)
       
-      exponent = 2
-    else:
-      exponent = methodConfig.exponent
+      exponent=2
 
     return pNormDistance(coordinate_1, coordinate_2, exponent)
 
   elif(method=="sphere"):
-    are_spherical = not isSpherical(coordinate_1) or not isSpherical(coordinate_2)
+    are_spherical=isSpherical(coordinate_1) and isSpherical(coordinate_2)
+    has_radius_key=hasKey(methodConfig, "radius")
 
-    return throw(notification_message.replace("_placeholder_", "radius")) if not objectHasKey(methodConfig, "radius") \
+    emsg=notification_message.replace("_placeholder_", "radius")
+    return throw(emsg, TypeError) if not has_radius_key \
       else ( \
-        throw("Provided coordinates are not spherical!") if are_spherical \
-        else nSphereDistance(coordinate_1, coordinate_2, methodConfig.radius)
-      )
+        throw("Provided coordinates are not spherical!", TypeError) if are_spherical \
+        else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
+      ) 
 
   elif(method=="manhattan"):
     return pNormDistance(coordinate_1, coordinate_2, 1)
@@ -129,7 +147,8 @@ def distance(coordinate_1, coordinate_2, method="pnorm", methodConfig={}):
     return pNormDistance(coordinate_1, coordinate_2, Inf)
 
   else:
-    throw("There are only available methods: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']")
+    emsg="There are only available methods: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']"
+    throw(emsg, TypeError)
   
 
 '''
