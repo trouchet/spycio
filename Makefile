@@ -71,10 +71,7 @@ lint: clean ## perform inplace lint fixes
 	pre-commit run --all-files
 
 coverage: clean ## check code coverage quickly with the default Python
-	coverage run --source "$(PACKAGE_NAME)" -m pytest
-	coverage report
-	coverage html
-	$(BROWSER) htmlcov/index.html
+	pytest --cov-report term-missing --cov="$(PACKAGE_NAME)" tests/ 
 
 install: clean ## install the package to the active Python's site-packages
 	poetry shell
