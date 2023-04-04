@@ -148,7 +148,7 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
     
     return throw(emsg1, TypeError) if not has_radius_key \
       else ( \
-        throw(emsg2, TypeError) if are_spherical \
+        throw(emsg2, TypeError) if not are_spherical \
         else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
       ) 
 
