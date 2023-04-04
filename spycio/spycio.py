@@ -6,18 +6,6 @@ from warnings import warn
 from .utils import hav, spherToCart, isSpherical, throw, hasKey
 
 '''
-  @abstract vector argument based on n-norm
- 
-  @param {Array} u
-  @param {Array} v
-  @param {Number} n
-  @return {Number}
-'''
-def arguv(u, v, n):
-  return arccos(dot(u, v) / (pNorm(u, n) * pNorm(v, n)))
-
-
-'''
   @abstract n-norm of a number
  
   @param {Array} arr
@@ -69,6 +57,17 @@ def sphereCentralAngle(coordinate_1, coordinate_2):
   return 2 * arcsin(sqrt(hav_theta))
 
 '''
+  @abstract vector argument based on n-norm
+ 
+  @param {Array} u
+  @param {Array} v
+  @param {Number} n
+  @return {Number}
+'''
+def arguv(u, v, n):
+  return arccos(dot(u, v) / (pNorm(u, n) * pNorm(v, n)))
+
+'''
   @abstract returns the central angle between two coordinate points on a sphere
  
   @param {Array} coordinate_1
@@ -110,9 +109,10 @@ def nSphereDistance(coord_1, coord_2, R):
   @param {Object} methodConfig
   @return {Number}
 '''
-def distance(coordinate_1, coordinate_2, method="pnorm", methodConfig={}):
+def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   notification_message="There must exist property '_placeholder_' on config argument 'methodConfig'!"
   
+  # pNorm-based distance
   if(method=="pnorm"):
     exponent=-1
 
@@ -126,30 +126,36 @@ def distance(coordinate_1, coordinate_2, method="pnorm", methodConfig={}):
 
     return pNormDistance(coordinate_1, coordinate_2, exponent)
 
+  # 1-Norm-based distance
+  elif(method=="manhattan"):
+    return pNormDistance(coordinate_1, coordinate_2, 1)
+  
+  # 2-Norm-based distance
+  elif(method=="euclidean"):
+    return pNormDistance(coordinate_1, coordinate_2, 2)
+  
+  # Inf-Norm-based distance
+  elif(method=="max"):
+    return pNormDistance(coordinate_1, coordinate_2, Inf)
+
+  # Sphere-based distance
   elif(method=="sphere"):
     are_spherical=isSpherical(coordinate_1) and isSpherical(coordinate_2)
     has_radius_key=hasKey(methodConfig, "radius")
 
-    emsg=notification_message.replace("_placeholder_", "radius")
-    return throw(emsg, TypeError) if not has_radius_key \
+    emsg1=notification_message.replace("_placeholder_", "radius")
+    emsg2="Provided coordinates are not spherical!"
+    
+    return throw(emsg1, TypeError) if not has_radius_key \
       else ( \
-        throw("Provided coordinates are not spherical!", TypeError) if are_spherical \
+        throw(emsg2, TypeError) if are_spherical \
         else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
       ) 
 
-  elif(method=="manhattan"):
-    return pNormDistance(coordinate_1, coordinate_2, 1)
-  
-  elif(method=="euclidean"):
-    return pNormDistance(coordinate_1, coordinate_2, 2)
-  
-  elif(method=="max"):
-    return pNormDistance(coordinate_1, coordinate_2, Inf)
-
+  # Complains on unknown method
   else:
-    emsg="There are only available methods: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']"
+    emsg="There are only the following methods available: ['pnorm', 'euclidean', 'manhattan', 'max', 'sphere']"
     throw(emsg, TypeError)
-  
 
 '''
   @abstract returns the distance of two points based on

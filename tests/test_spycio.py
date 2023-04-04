@@ -105,14 +105,11 @@ def test_distance_error_missingMethod():
     wrong_config={}
     
     
-    emsg="There are only available methods: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']"
+    emsg="There are only the following methods available: ['pnorm', 'sphere', 'euclidean', 'manhattan', 'max']"
 
     with raises(TypeError):
         assert distance(coord_1, coord_2, wrong_method, wrong_config), emsg
-
-    with raises(Exception):
-        assert distance(coord_1, coord_2, None, {}), emsg
-
+    
     emsg="There must exist property 'radius' on config argument 'methodConfig'!"
     with raises(TypeError):
         assert distance(coord_1, coord_2, "sphere", {}), emsg

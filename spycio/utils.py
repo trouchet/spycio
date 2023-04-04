@@ -70,14 +70,17 @@ def geoToSpher(lat_degree, lng_degree):
   @return {Boolean}
 '''
 def isSpherical(u):
+  u_length=len(u)
+  
   isBetweenmPIandpPI=lambda result, elem: result and elem >= -pi and elem <= pi
   isBetween0and2PI=lambda result, elem: result and elem >= 0 and elem <= 2 * pi
   
-  return (
-    len(u) >= 2 and \
-    reduce(isBetweenmPIandpPI, u[0:len(u) - 1], True) and \
-    reduce(isBetween0and2PI, u[len(u) - 1:len(u)], True)
-  )
+  areBetweenmPIandpPI=lambda vec: reduce(isBetweenmPIandpPI, vec, True)
+  areBetween0and2PI=lambda vec: reduce(isBetween0and2PI, vec, True)
+
+  return len(u) >= 2 and \
+    areBetweenmPIandpPI(u[0: - 1]) and\
+    areBetween0and2PI(u[u_length - 1:u_length])
 
 '''
   @abstract converts map of spherical to cartesian coordinates
@@ -110,8 +113,11 @@ def spherToCart(coords, R):
     prev_sphers.extend(last_coord)
 
     return prev_sphers
+  
   else: 
-    criterium_1='1. Elements between indexes {0} to {1} must be between -pi and pi'
+    criterium_1='1. Elements between indexes {0} to {1} must be between -pi and pi'.format(\
+      0, len_coords - 1
+    )
     criterium_2='2. Last element must be between 0 and 2*pi'
     emsg='Input coordinates must be spherical: \n{criteria[0]}\n {criteria[1]} \n'.format(\
       first=0, blast=len_coords - 1, last=len_coords, \
