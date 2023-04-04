@@ -1,13 +1,13 @@
 from spycio.utils import radianToDegree, degreeToRadian, \
-    geoToSpher, hav, spherToCart, isSpherical, throw, hasKey
+    geoToSpher, hav, isSpherical, throw, hasKey
 from spycio.spycio import pNorm
+from .fixtures import TOL
 
+from pytest import mark
 from math import isclose
 from numpy import pi, arange
 
-# Assertion tolerance
-TOL=0.01
-EPS=0.001
+from .fixtures import non_spherical_candidates, spher_cartesian_candidates
 
 def test_radian_to_degree():
     assert radianToDegree(pi) == 180
@@ -21,26 +21,17 @@ def test_geoToSpher():
 def test_geoToSpher():
     assert geoToSpher(0, 0) == [pi / 2, 0]
 
-'''
-def test_spherToCart():
-    assert isclose(pNorm(spherToCart([0, 0], 1), 2), 1)
-    assert isclose(pNorm(spherToCart([pi / 2, 0], 1), 2), 1)
-    assert isclose(pNorm(spherToCart([pi / 2, pi / 2], 1), 2), 1)
-'''
+@mark.parametrize("candidate, norm_value", spher_cartesian_candidates)
+def test_spherToCart(candidate, norm_value):
+    assert isclose(pNorm(candidate, 2), norm_value, abs_tol=TOL)
 
-'''    
 def test_hav():
-    assert isclose(hav(pi), 1)
-    assert isclose(hav(2 * pi), 0)
-'''
-    
-def test_isSpherical():
-    assert isSpherical([]) == False 
-    assert isSpherical([42]) == False
-    assert isSpherical([-pi - EPS, 0]) == False
-    assert isSpherical([pi + EPS, 0]) == False
-    assert isSpherical([0, -EPS]) == False
-    assert isSpherical([0, 2 * pi + EPS]) == False
+    assert isclose(hav(pi), 1, abs_tol=TOL)
+    assert isclose(hav(2 * pi), 0, abs_tol=TOL)
+
+@mark.parametrize("candidate", non_spherical_candidates)
+def test_isSpherical(candidate):
+    assert isSpherical(candidate) == False 
 
 def test_isSpherical_batch():
     thetas = arange(-3, 3, (2 * pi) / 8)

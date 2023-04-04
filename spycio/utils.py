@@ -94,21 +94,21 @@ def spherToCart(coords, R):
   len_coords=len(coords)
   
   if(isSpherical(coords)):
-        
+    
     def prodsin(angles): 
       sinprodFun = lambda prod_sofar, angle: prod_sofar * sin(angle)
       return 1 if len(angles) == 0 else reduce(sinprodFun, angles, 1)
-    
+
     def s2cRecur(angles, index):
       return prodsin(angles[0:index]) * cos(angles[index])
     
     prev_coords = coords[0:len_coords - 1]
-    indexes = range(len_coords-1)
+    indexes = range(len_coords)
     curr_coord = coords[len_coords - 1]
     last_coord = [R * prodsin(prev_coords) * sin(curr_coord)]
-
-    spherDistFun = lambda index: R * s2cRecur(prev_coords, index)  
-
+    
+    spherDistFun = lambda index: R * s2cRecur(coords, index)  
+    
     prev_sphers=list(map(spherDistFun, indexes))
     prev_sphers.extend(last_coord)
 

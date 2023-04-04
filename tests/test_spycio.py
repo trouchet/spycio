@@ -9,8 +9,8 @@ from numpy import pi
 from spycio.spycio import pNorm, distance, pNormDistance, \
     greatCircleDistance, nSphereDistance, travelTime
 
-# Assertion tolerance
-TOL=0.01
+from .fixtures import TOL, EPS
+
 
 @mark.parametrize("exponent,expected_value", [ (1, 2), (2, sqrt(2)), (Inf, 1), ])
 def test_distance_pnorm(exponent, expected_value):
@@ -49,7 +49,7 @@ def test_distance_sphere():
     coord_2 = [pi / 2, 0]
     method="sphere"
     config={ "radius": 1 }
-
+    
     result=distance(coord_1, coord_2, method, config)
     expected=(2 * pi) / 4
 
