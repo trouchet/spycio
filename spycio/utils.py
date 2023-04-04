@@ -71,7 +71,7 @@ def geoToSpher(lat_degree, lng_degree):
 '''
 def isSpherical(u):
   u_length=len(u)
-  
+
   isBetweenmPIandpPI=lambda result, elem: result and elem >= -pi and elem <= pi
   isBetween0and2PI=lambda result, elem: result and elem >= 0 and elem <= 2 * pi
   
@@ -115,12 +115,15 @@ def spherToCart(coords, R):
     return prev_sphers
   
   else: 
-    criterium_1='1. Elements between indexes {0} to {1} must be between -pi and pi'.format(\
+    criterium_1='1. It is an array with more than two elements;'
+    criterium_2='2. Elements between indexes {0} to {1} must be between -pi and pi;'.format(\
       0, len_coords - 1
     )
-    criterium_2='2. Last element must be between 0 and 2*pi'
-    emsg='Input coordinates must be spherical: \n{criteria[0]}\n {criteria[1]} \n'.format(\
+    criterium_3='3. Last element must be between 0 and 2*pi.'
+
+    emsg='These are criteria for input to be spherical: \n{criteria[0]}\n {criteria[1]} \n'.format(\
       first=0, blast=len_coords - 1, last=len_coords, \
-        criteria=[criterium_1, criterium_2] \
+        criteria=[criterium_1, criterium_2, criterium_3] \
     )
+    
     throw(emsg, TypeError)
