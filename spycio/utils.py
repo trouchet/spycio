@@ -51,13 +51,15 @@ def hav(theta_radian):
   return sin(theta_radian / 2) ** 2
 
 '''
-  @abstract converts longitude and latitude to spherical coordinates 
+  @abstract convert geographical coordinates a.k.a. 
+  latitude and longitude in degrees, into spherical coordinates
  
-  @param {Array} radian_angle
-  @return {Array}
+  @param {Number} lat_degree
+  @param {Number} lng_degree
+  @return {Number}
 '''
 def geoToSpher(lat_degree, lng_degree):
-  return [pi / 2 - degreeToRadian(lng_degree), degreeToRadian(lat_degree)]
+  return [pi / 2 + degreeToRadian(lat_degree), pi+degreeToRadian(lng_degree)]
 
 '''
   @abstract an spherical coordinate of dimension n has:
@@ -79,7 +81,7 @@ def isSpherical(u):
   areBetween0and2PI=lambda vec: reduce(isBetween0and2PI, vec, True)
 
   return len(u) >= 2 and \
-    areBetweenmPIandpPI(u[0: - 1]) and\
+    areBetweenmPIandpPI(u[0:u_length - 1]) and\
     areBetween0and2PI(u[u_length - 1:u_length])
 
 '''

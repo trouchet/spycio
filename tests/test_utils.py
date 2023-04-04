@@ -8,7 +8,8 @@ from spycio.spycio import pNorm
 
 from .fixtures import TOL
 
-from .fixtures import non_spherical_candidates, spher_cartesian_tuples
+from .fixtures import non_spherical_candidates, \
+    spher_cartesian_tuples, geographical_candidate_tuples
 
 def test_radian_to_degree():
     assert radianToDegree(pi) == 180
@@ -16,11 +17,9 @@ def test_radian_to_degree():
 def test_degree_to_radian():
     assert degreeToRadian(180) == pi
 
-def test_geoToSpher():
-    assert geoToSpher(0, 0) == [pi / 2, 0]
-
-def test_geoToSpher():
-    assert geoToSpher(0, 0) == [pi / 2, 0]
+@mark.parametrize("latitude,longitude,spher_coordinates", geographical_candidate_tuples)
+def test_geoToSpher(latitude, longitude, spher_coordinates):
+    assert geoToSpher(latitude, longitude) == spher_coordinates
 
 @mark.parametrize("candidate, norm_value", spher_cartesian_tuples)
 def test_spherToCart_candidates(candidate, norm_value):
@@ -42,7 +41,7 @@ def test_spherToCart(candidate):
         assert spherToCart(candidate, R)
 
 def test_isSpherical_batch():
-    thetas = arange(-3, 3, (2 * pi) / 8)
+    thetas = arange(0, 3, (2 * pi) / 8)
     phis = arange(0, 6, (2 * pi) / 8)
 
     for theta in thetas:

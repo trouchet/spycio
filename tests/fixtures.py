@@ -20,6 +20,18 @@ spher_cartesian_candidates=[
     spherToCart([pi / 2, 0], 1)
 ] 
 
+geographical_candidate_tuples=[
+    ( 90,    180, [   pi, 2*pi]) ,  
+    ( 90,     0 , [   pi, pi  ]) ,  
+    ( 90,   -180, [   pi, 0   ]),  
+    (  0,    180, [ pi/2, 2*pi]),  
+    (  0,      0, [ pi/2, pi  ]),  
+    (  0,   -180, [ pi/2, 0   ]),  
+    (-90,    180, [    0, 2*pi]),  
+    (-90,     0 , [    0, pi  ]),  
+    (-90,   -180, [    0, 0   ])  
+]
+
 spher_cartesian_norms=[ 1, 1, 1 ]
 
 spher_cartesian_tuples=list(\
