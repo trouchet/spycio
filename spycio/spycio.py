@@ -166,5 +166,5 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   @param {Object} methodConfig
   @return {Number}
 '''
-def travelTime( average_speed, coordinate_1, coordinate_2, method, methodConfig): 
+def travelTime( average_speed, coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
     return distance(coordinate_1, coordinate_2, method, methodConfig) / average_speed

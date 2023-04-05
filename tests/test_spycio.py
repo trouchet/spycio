@@ -3,13 +3,12 @@ from __future__ import annotations
 from pytest import mark, raises, warns
 from math import isclose
 
-from numpy import sqrt, Inf
-from numpy import pi
+from numpy import sqrt, Inf, pi
 
 from spycio.spycio import pNorm, distance, pNormDistance, \
     greatCircleDistance, nSphereDistance, travelTime
 
-from .fixtures import TOL, EPS
+from .fixtures import TOL, distance_setups, distance_setups_without_config
 
 def test_pNorm():
     coords = [1, 1, 1, 1, 1]
@@ -72,16 +71,7 @@ def test_nSphereDistance():
 
     assert isclose(result, expected, rel_tol=TOL)
 
-@mark.parametrize(
-    "average_speed,coordinate_1,coordinate_2,method,method_config,expected_value", \
-[
-    (1, [1, 1], [2, 2], "pnorm", { "exponent": 2 }, sqrt(2)),
-    (1, [1, -1], [2, 2], "pnorm", { "exponent": Inf }, 3),
-    (1, [0, 0], [pi / 2, 0], "sphere", { "radius": 1 }, (2 * pi) / 4),
-    (2, [1, 1], [2, 2], "pnorm", { "exponent": 2 }, sqrt(2) / 2),
-    (2, [1, -1], [2, 2], "pnorm", { "exponent": Inf }, 1.5),
-    (2, [0, 0], [pi / 2, 0], "sphere", { "radius": 1 }, (2 * pi) / 8)
-])
+@mark.parametrize(distance_setups["names"], distance_setups["variables"])
 def test_travelTime(\
     average_speed, coordinate_1, coordinate_2, method, method_config, expected_value \
 ):
@@ -92,6 +82,17 @@ def test_travelTime(\
         method, \
         method_config \
     )
+
+    assert isclose(result, expected_value, rel_tol=TOL)
+
+@mark.parametrize(\
+    distance_setups_without_config["names"] , \
+    distance_setups_without_config["variables"] \
+)
+def test_travelTime_without_methodConfig(\
+    average_speed, coordinate_1, coordinate_2, method, expected_value \
+):
+    result = travelTime(average_speed, coordinate_1, coordinate_2, method)
 
     assert isclose(result, expected_value, rel_tol=TOL)
 
