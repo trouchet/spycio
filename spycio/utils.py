@@ -59,7 +59,7 @@ def hav(theta_radian):
   @return {Number}
 '''
 def geoToSpher(lat_degree, lng_degree):
-  return [pi / 2 + degreeToRadian(lat_degree), pi+degreeToRadian(lng_degree)]
+  return [pi/2 + degreeToRadian(lat_degree), pi + degreeToRadian(lng_degree)]
 
 '''
   @abstract an spherical coordinate of dimension n has:
@@ -74,7 +74,7 @@ def geoToSpher(lat_degree, lng_degree):
 def isSpherical(u):
   u_length=len(u)
 
-  isBetweenmPIandpPI=lambda result, elem: result and elem >= -pi and elem <= pi
+  isBetweenmPIandpPI=lambda result, elem: result and elem >= 0 and elem <= pi
   isBetween0and2PI=lambda result, elem: result and elem >= 0 and elem <= 2 * pi
   
   areBetweenmPIandpPI=lambda vec: reduce(isBetweenmPIandpPI, vec, True)
