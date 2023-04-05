@@ -1,6 +1,6 @@
 from pytest import mark, raises
 from math import isclose
-from numpy import pi, arange, array
+from numpy import pi, arange
 
 from spycio.utils import radianToDegree, degreeToRadian, \
     geoToSpher, hav, isSpherical, spherToCart
@@ -9,7 +9,8 @@ from spycio.spycio import pNorm
 from .fixtures import TOL
 
 from .fixtures import non_spherical_candidates, \
-    spher_cartesian_tuples, geographical_candidate_tuples
+    spher_cartesian_tuples, geographical_candidate_tuples, \
+    spherical_coordinates
 
 def test_radian_to_degree():
     assert radianToDegree(pi) == 180
@@ -20,6 +21,10 @@ def test_degree_to_radian():
 @mark.parametrize("latitude,longitude,spher_coordinates", geographical_candidate_tuples)
 def test_geoToSpher(latitude, longitude, spher_coordinates):
     assert geoToSpher(latitude, longitude) == spher_coordinates
+
+@mark.parametrize("latitude,longitude,spher_coordinates", geographical_candidate_tuples)
+def test_geoToSpher(latitude, longitude, spher_coordinates):
+    assert isSpherical(geoToSpher(latitude, longitude)) == True
 
 @mark.parametrize("candidate, norm_value", spher_cartesian_tuples)
 def test_spherToCart_candidates(candidate, norm_value):
@@ -40,10 +45,7 @@ def test_spherToCart(candidate):
     with raises(TypeError):
         assert spherToCart(candidate, R)
 
-def test_isSpherical_batch():
-    thetas = arange(0, 3, (2 * pi) / 8)
-    phis = arange(0, 6, (2 * pi) / 8)
 
-    for theta in thetas:
-        for phi in phis:
-            assert isSpherical([theta, phi]) == True
+@mark.parametrize("theta, phi", spherical_coordinates)
+def test_isSpherical_batch(theta, phi):
+    assert isSpherical([theta, phi]) == True

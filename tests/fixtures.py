@@ -1,4 +1,5 @@
-from numpy import pi
+from numpy import pi, linspace
+from itertools import product
 
 from spycio.utils import spherToCart
 
@@ -19,6 +20,22 @@ spher_cartesian_candidates=[
     spherToCart([pi / 2, pi / 2], 1),
     spherToCart([pi / 2, 0], 1)
 ] 
+
+n_lat=5
+n_lng=5
+
+lat_bottom=0
+lat_upper=3
+
+lng_bottom=0
+lng_upper=6
+
+spherical_coordinates=list(
+    product(\
+        linspace(lat_bottom, lat_upper, n_lat), \
+        linspace(lng_bottom, lng_upper, n_lng)
+    )
+)
 
 geographical_candidate_tuples=[
     ( 90,    180, [   pi, 2*pi]) ,  
