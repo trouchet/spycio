@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spycio"
-version = "0.2.0"
+version = "0.2.1"
 description = "Distances in python"
 authors = ["Bruno Peixoto <brunolnetto@gmail.com>"]
 license = "MIT license"
