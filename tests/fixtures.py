@@ -24,12 +24,6 @@ non_spherical_candidates=toParameter(
     ]
 )
 
-spher_cartesian_candidates=[
-    spherToCart([0, 0], 1),
-    spherToCart([pi / 2, pi / 2], 1),
-    spherToCart([pi / 2, 0], 1)
-] 
-
 n_lat=5
 n_lng=5
 
@@ -89,7 +83,13 @@ geographical_candidate_tuples=toParameter(\
     ]\
 )
 
+spher_cartesian_candidates=[
+    spherToCart([0, 0], 1),
+    spherToCart([pi / 2, pi / 2], 1),
+    spherToCart([pi / 2, 0], 1)
+] 
 spher_cartesian_norms=[ 1, 1, 1 ]
+
 spher_cartesian_tuples=toParameter(\
     "candidate, norm_value", list(zip(spher_cartesian_candidates, spher_cartesian_norms))
 )

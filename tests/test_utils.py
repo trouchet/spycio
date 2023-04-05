@@ -18,6 +18,10 @@ def test_radian_to_degree():
 def test_degree_to_radian():
     assert degreeToRadian(180) == pi
 
+def test_hav():
+    assert isclose(hav(pi), 1, abs_tol=TOL)
+    assert isclose(hav(2 * pi), 0, abs_tol=TOL)
+
 @mark.parametrize(geographical_candidate_tuples["names"], geographical_candidate_tuples["variables"])
 def test_geoToSpher(latitude, longitude, spher_coordinates):
     geocoordinates=geoToSpher(latitude, longitude)
@@ -28,10 +32,6 @@ def test_geoToSpher(latitude, longitude, spher_coordinates):
 @mark.parametrize(spher_cartesian_tuples["names"], spher_cartesian_tuples["variables"])
 def test_spherToCart_candidates(candidate, norm_value):
     assert isclose(pNorm(candidate, 2), norm_value, abs_tol=TOL)
-
-def test_hav():
-    assert isclose(hav(pi), 1, abs_tol=TOL)
-    assert isclose(hav(2 * pi), 0, abs_tol=TOL)
 
 @mark.parametrize(non_spherical_candidates["names"], non_spherical_candidates["variables"])
 def test_isSpherical(candidate):
