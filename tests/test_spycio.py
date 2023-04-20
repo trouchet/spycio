@@ -6,7 +6,7 @@ from math import isclose
 from numpy import sqrt, Inf, pi
 
 from spycio.spycio import pNorm, distance, pNormDistance, \
-    greatCircleDistance, nSphereDistance, travelTime
+    greatCircleDistance, nSphereDistance, travelTime, cosnuv
 
 from .fixtures import TOL, distance_setups, distance_setups_without_config, \
     pnorm_fixtures, non_spherical_candidate_tuples
@@ -18,6 +18,11 @@ def test_pNorm():
     expected = sqrt(5)
 
     assert isclose(result, expected, rel_tol=TOL)
+
+def test_cosnuv():
+    with raises(ZeroDivisionError):
+        assert cosnuv([0, 0], [0, 0], 2)
+
 
 def test_pNormDistance_error():
     coord_1 = [1, -1]
