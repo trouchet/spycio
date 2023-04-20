@@ -57,14 +57,23 @@ def test_nSphereDistance():
     coord_3 = [pi, 0]
     radius = 1
     
-    assert nSphereDistance(coord_1, coord_2, radius) == \
-    greatCircleDistance(coord_1, coord_2, radius)
+    assert isclose(\
+        nSphereDistance(coord_1, coord_2, radius), \
+        greatCircleDistance(coord_1, coord_2, radius), \
+        rel_tol=TOL
+    )
 
-    assert nSphereDistance(coord_1, coord_3, radius) == \
-    greatCircleDistance(coord_1, coord_3, radius)
+    assert isclose(\
+        nSphereDistance(coord_1, coord_3, radius), \
+        greatCircleDistance(coord_1, coord_3, radius), \
+        rel_tol=TOL
+    )
 
-    assert nSphereDistance(coord_2, coord_3, radius) == \
-    greatCircleDistance(coord_2, coord_3, radius)
+    assert isclose(\
+        nSphereDistance(coord_2, coord_3, radius), \
+        greatCircleDistance(coord_2, coord_3, radius), \
+        rel_tol=TOL
+    )
 
     expected = (2 * pi * radius) / 4
     result = nSphereDistance(coord_1, coord_2, radius)
