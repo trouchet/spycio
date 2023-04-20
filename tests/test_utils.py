@@ -48,12 +48,10 @@ def test_isSpherical_batch(coordinates):
 def test_not_isSpherical(candidate):
     assert isSpherical(candidate) == False
 
-'''
-@mark.parametrize(geographical_coordinates["names"], geographical_coordinates["variables"])
+@mark.parametrize(non_geographical_candidates["names"], non_geographical_candidates["variables"])
 def test_isGeographical_batch(coordinates):
-    assert isGeographical(coordinates) == True
+    assert isGeographical(coordinates) == False
 
 @mark.parametrize(geographical_coordinates["names"], geographical_coordinates["variables"])
 def test_isGeographical_batch(coordinates):
     assert isGeographical(coordinates) == True
-'''

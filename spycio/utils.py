@@ -73,9 +73,13 @@ def geoToSpher(lat_degree, lng_degree):
 '''
 def isGeographical(u):
   hasLength2=lambda x: len(x)==2
-  isBetweenmmPI2andpPI2=lambda vec: vec[0] >= -pi/2 and vec[1] >= pi/2
-  isBetweenmPIandpPI=lambda vec: vec[0] >= -pi and vec[1] <= pi
+  isBetweenmmPI2andpPI2=lambda vec: vec[0] >= -90 and vec[0] <= 90
+  isBetweenmPIandpPI=lambda vec: vec[1] >= -180 and vec[1] <= 180
   
+  print(hasLength2(u))
+  print(isBetweenmmPI2andpPI2(u))
+  print(isBetweenmPIandpPI(u))
+
   return hasLength2(u) and isBetweenmmPI2andpPI2(u) and isBetweenmPIandpPI(u)
 
 '''
@@ -96,10 +100,6 @@ def isSpherical(u):
   
   areBetweenmPIandpPI=lambda vec: reduce(isBetween0andpPI, vec, True)
   areBetween0and2PI=lambda vec: reduce(isBetween0and2PI, vec, True)
-
-  print(u_length >= 2)
-  print(areBetweenmPIandpPI(u[0:u_length - 1]))
-  print(areBetween0and2PI(u[u_length - 1:u_length])) 
 
   return u_length >= 2 and \
     areBetweenmPIandpPI(u[0:u_length - 1]) and\

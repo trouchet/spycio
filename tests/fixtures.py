@@ -35,28 +35,26 @@ non_geographical_candidates=toParameter(
     ]
 )
 
-n_lat=5
-n_lng=5
+n_phi=5
+n_lambda=5
 
-lat_bottom=0
-lat_upper=3
+lambda_bottom=0
+lambda_upper=3
 
-lng_bottom=0
-lng_upper=6
-
+phi_bottom=0
+phi_upper=6
 
 spherical_coordinates=toParameter(\
     "coordinates", 
     list(
         product(\
-            linspace(lat_bottom, lat_upper, n_lat), \
-            linspace(lng_bottom, lng_upper, n_lng)
+            linspace(lambda_bottom, lambda_upper, n_phi), \
+            linspace(phi_bottom, phi_upper, n_lambda)
         )
     )
 )
 
-n_phi=5
-n_lambda=5
+
 
 lat_bottom=-90
 lat_upper=90
