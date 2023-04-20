@@ -10,7 +10,7 @@ from .fixtures import TOL
 
 from .fixtures import non_spherical_candidates, non_geographical_candidates, \
     spher_cartesian_tuples, geographical_candidate_tuples, \
-    spherical_coordinates, geographical_coordinates    
+    spherical_coordinates, geographical_coordinates
 
 def test_radian_to_degree():
     assert radianToDegree(pi) == 180

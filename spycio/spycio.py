@@ -144,21 +144,27 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
 
   # Cosine distance
   elif(method=="cosine"):
-    return 1-cosnuv(coordinate_1, coordinate_2, 1)
+    return 1-cosnuv(coordinate_1, coordinate_2, 2)
   
   # Canberra distance
   elif(method=="canberra"):
     add_lambda=lambda acc, x: acc+x
-    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0])-abs(x_i[1]))
+    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0])+abs(x_i[1]))
     
     return reduce(add_lambda, map(canberra_lambda, zip(coordinate_1, coordinate_2)))
   
   # Braycurtis distance
   elif(method=="braycurtis"):
     add_lambda=lambda acc, x: acc+x
-    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0]+x_i[1]))
+    braycurtis_numerator_lambda=lambda x_i: abs(x_i[0]-x_i[1])
+    braycurtis_denominator_lambda=lambda x_i: abs(x_i[0]+x_i[1])
     
-    return reduce(add_lambda, map(canberra_lambda, zip(coordinate_1, coordinate_2)))
+    coords_zip=zip(coordinate_1, coordinate_2)
+
+    numerator=reduce(braycurtis_numerator_lambda, coords_zip)
+    denominator=reduce(braycurtis_denominator_lambda, coords_zip)
+
+    return numerator/denominator
 
   # 2-Norm-based distance
   elif(method=="euclidean"):
@@ -202,12 +208,26 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   
   # Sphere-based distance
   elif(method=="geographical"):
-    are_geographical=isGeographical(coordinate_1) and isGeographical(coordinate_2)
+    coordinate_1_is_geographical=isGeographical(coordinate_1)
+    coordinate_2_is_geographical=isGeographical(coordinate_2)
+    are_geographical=coordinate_1_is_geographical and coordinate_2_is_geographical
+    both_are_not_geographical=not coordinate_1_is_geographical and not coordinate_2_is_geographical
     
     has_radius_key=hasKey(methodConfig, "radius")
 
     emsg1=notification_message.replace("_placeholder_", "radius")
-    emsg2="Provided coordinates are not geographical!"
+    
+    subject='Both provided coordinates' if both_are_not_geographical \
+      else (\
+        'Provided coordinate 1' if not coordinate_1_is_geographical \
+        else ( \
+          'Provided coordinate 2' if not coordinate_2_is_geographical \
+          else 'None'
+        ) 
+      )
+    verb= 'are' if both_are_not_geographical else 'is'
+
+    emsg2="{subject} {verb} not geographical!".format(subject=subject, verb=verb)
     
     return throw(emsg1, TypeError) if not has_radius_key \
       else ( \

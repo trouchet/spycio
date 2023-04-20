@@ -24,6 +24,17 @@ non_spherical_candidates=toParameter(
     ]
 )
 
+non_spherical_candidate_tuples=toParameter(
+    "candidate1,candidate2",
+    [
+        ([], []), ([42], []), 
+        ([-pi - EPS, 0], []), 
+        ([pi + EPS, 0], []), 
+        ([0, -EPS], []), 
+        ([0, 2 * pi + EPS], [])
+    ]
+)
+
 non_geographical_candidates=toParameter(
     "candidate",
     [

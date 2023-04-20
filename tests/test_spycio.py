@@ -8,7 +8,8 @@ from numpy import sqrt, Inf, pi
 from spycio.spycio import pNorm, distance, pNormDistance, \
     greatCircleDistance, nSphereDistance, travelTime
 
-from .fixtures import TOL, distance_setups, distance_setups_without_config, pnorm_fixtures
+from .fixtures import TOL, distance_setups, distance_setups_without_config, \
+    pnorm_fixtures, non_spherical_candidate_tuples
 
 def test_pNorm():
     coords = [1, 1, 1, 1, 1]
@@ -128,17 +129,6 @@ def test_distance_error_missingMethod():
     with raises(TypeError):
         assert distance(coord_1, coord_2, "sphere", {}), emsg
 
-def test_distance_sphere_error_nonSpherical():
-    coord_1 = [0]
-    coord_2 = [1]
-
-    method="sphere"
-    config={ "radius": 1 }
-    emsg="Provided coordinates are not spherical!"
-
-    with raises(TypeError):
-        assert distance(coord_1, coord_2, method, config), emsg
-
 @mark.parametrize(pnorm_fixtures["names"], pnorm_fixtures["variables"])
 def test_distance_pnorm(exponent, expected_value):
     """
@@ -221,6 +211,20 @@ def test_distance_euclidean():
     expected=sqrt(2)
 
     assert isclose(result, expected, rel_tol=TOL)
+
+    method="sqeuclidean"
+    result=distance(coord_1, coord_2, method)
+    expected=2
+
+    assert isclose(result, expected, rel_tol=TOL)
+
+@mark.parametrize(non_spherical_candidate_tuples["names"], non_spherical_candidate_tuples["variables"])
+def test_distance_sphere_error_nonSpherical(candidate1,candidate2):
+    method="sphere"
+    config={ "radius": 1 }
+
+    with raises(TypeError):
+        assert distance(candidate1, candidate2, method, config)
 
 def test_distance_sphere():
     """
