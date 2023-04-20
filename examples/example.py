@@ -23,6 +23,8 @@ def format_distance(A, B, speed, method, config):
 # Default distance calculation: Euclidean
 A=[0, 0]
 B=[1, 1]
+C=[2, 2]
+D=[pi / 2, 0]
 
 speed=1
 
@@ -31,9 +33,9 @@ print('Euclidean distance: '+str(distance(A, B)))
 print('\n')
 
 configurations=[
-    ([1, 1], [2, 2], speed, "manhattan"),
-    ([1, 1], [2, 2], speed, "euclidean"),
-    ([1, 1], [2, 2], speed, "max")
+    (B, C, speed, "manhattan"),
+    (B, C, speed, "euclidean"),
+    (B, C, speed, "max")
 ]
 
 print('Format distance without configuration: ')
@@ -43,14 +45,14 @@ for A, B, speed, method in configurations:
 print('\n')
 
 configurations=[
-    ([1, 1], [2, 2], speed, "pnorm", { "exponent": 2 }),
-    ([1, 1], [2, 2], speed, "pnorm", { "exponent": 3 }),
-    ([1, 1], [2, 2], speed, "pnorm", { "exponent": 4 }),
-    ([1, 1], [2, 2], speed, "pnorm", { "exponent": Inf }),
-    ([0, 0], [pi / 2, 0], speed, "sphere", { "radius": 1 })
+    (B, C, speed, "pnorm", { "exponent": 2 }),
+    (B, C, speed, "pnorm", { "exponent": 3 }),
+    (B, C, speed, "pnorm", { "exponent": 4 }),
+    (B, C, speed, "pnorm", { "exponent": Inf }),
+    (A, D, speed, "sphere", { "radius": 1 })
 ]
 
 print('Format distance with configuration: ')
 
-for A, B, speed, method, config in configurations:
-    print(format_distance(A, B, speed, method, config))
+for origin, target, speed, method, config in configurations:
+    print(format_distance(origin, target, speed, method, config))
