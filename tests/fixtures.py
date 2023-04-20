@@ -104,8 +104,10 @@ distance_setups_without_config=toParameter(\
     "average_speed,coordinate_1,coordinate_2,method,expected_value",
     [
         (1, A, B, "manhattan", 2),
+        (1, A, B, "cityblock", 2),
         (1, A, B, "euclidean", sqrt(2)),
         (1, A, B, "max", 1),
+        (1, A, B, "chebyshev", 1),
         (1, A, B, "cosine", 2.22e-16),
         (1, A, B, "braycurtis", 1/3),
         (1, A, B, "canberra", 2/3)
