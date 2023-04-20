@@ -55,6 +55,15 @@ def test_nSphereDistance():
     coord_2 = [pi / 2, 0]
     coord_3 = [pi, 0]
     radius = 1
+    
+    assert nSphereDistance(coord_1, coord_2, radius) == \
+    greatCircleDistance(coord_1, coord_2, radius)
+
+    assert nSphereDistance(coord_1, coord_3, radius) == \
+    greatCircleDistance(coord_1, coord_3, radius)
+
+    assert nSphereDistance(coord_2, coord_3, radius) == \
+    greatCircleDistance(coord_2, coord_3, radius)
 
     expected = (2 * pi * radius) / 4
     result = nSphereDistance(coord_1, coord_2, radius)
@@ -171,6 +180,13 @@ def test_distance_manhattan():
 
     assert isclose(result, expected, rel_tol=TOL)
 
+    method="cityblock"
+    
+    result=distance(coord_1, coord_2, method)
+    expected=2
+
+    assert isclose(result, expected, rel_tol=TOL)
+
 def test_distance_max():
     """
     Generates the max distance between points
@@ -179,6 +195,13 @@ def test_distance_max():
     coord_1 = [0, 0]
     coord_2 = [1, 1]
     method="max"
+    
+    result=distance(coord_1, coord_2, method)
+    expected=1
+
+    assert isclose(result, expected, rel_tol=TOL)
+
+    method="chebyshev"
     
     result=distance(coord_1, coord_2, method)
     expected=1

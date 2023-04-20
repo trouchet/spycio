@@ -24,6 +24,17 @@ non_spherical_candidates=toParameter(
     ]
 )
 
+non_geographical_candidates=toParameter(
+    "candidate",
+    [
+        ([]), ([42]), 
+        ([-pi/2 - EPS, 0]), 
+        ([pi/2 + EPS, 0]), 
+        ([0, -pi-EPS]), 
+        ([0, pi + EPS])
+    ]
+)
+
 n_lat=5
 n_lng=5
 
@@ -35,11 +46,30 @@ lng_upper=6
 
 
 spherical_coordinates=toParameter(\
-    "theta, phi", 
+    "coordinates", 
     list(
         product(\
             linspace(lat_bottom, lat_upper, n_lat), \
             linspace(lng_bottom, lng_upper, n_lng)
+        )
+    )
+)
+
+n_phi=5
+n_lambda=5
+
+lat_bottom=-90
+lat_upper=90
+
+lng_bottom=-180
+lng_upper=180
+
+geographical_coordinates=toParameter(\
+    "coordinates", 
+    list(
+        product(\
+            linspace(lat_bottom, lat_upper, n_phi), \
+            linspace(lng_bottom, lng_upper, n_lambda)
         )
     )
 )

@@ -1,9 +1,9 @@
 """Main module."""
-from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf
+from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf, dot
 from functools import reduce
 from warnings import warn
 
-from .utils import hav, spherToCart, isSpherical, throw, hasKey
+from .utils import hav, spherToCart, isSpherical, isGeographical, throw, hasKey
 
 '''
   @abstract n-norm of a number
@@ -64,8 +64,19 @@ def sphereCentralAngle(coordinate_1, coordinate_2):
   @param {Number} n
   @return {Number}
 '''
+def cosnuv(u, v, n):
+  return dot(u, v) / (pNorm(u, n) * pNorm(v, n))
+
+'''
+  @abstract vector argument based on n-norm
+ 
+  @param {Array} u
+  @param {Array} v
+  @param {Number} n
+  @return {Number}
+'''
 def arguv(u, v, n):
-  return arccos(dot(u, v) / (pNorm(u, n) * pNorm(v, n)))
+  return arccos(cosnuv(u, v, n))
 
 '''
   @abstract returns the central angle between two coordinate points on a sphere
@@ -98,7 +109,7 @@ def greatCircleDistance(coord_1, coord_2, R):
   @return {Number}
 '''
 def nSphereDistance(coord_1, coord_2, R):
-  return R * centralAngle(coord_1, coord_2, R)
+  return R * centralAngle(coord_1, coord_2, R)   
 
 '''
   @abstract returns the distance of two points based on
@@ -127,15 +138,37 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
     return pNormDistance(coordinate_1, coordinate_2, exponent)
 
   # 1-Norm-based distance
-  elif(method=="manhattan"):
+  elif(method=="manhattan" or method=="cityblock"):
     return pNormDistance(coordinate_1, coordinate_2, 1)
+
+  # Cosine distance
+  elif(method=="cosine"):
+    return 1-cosnuv(coordinate_1, coordinate_2, 1)
   
+  # Canberra distance
+  elif(method=="canberra"):
+    add_lambda=lambda acc, x: acc+x
+    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0])-abs(x_i[1]))
+    
+    return reduce(add_lambda, map(canberra_lambda, zip(coordinate_1, coordinate_2)))
+  
+  # Braycurtis distance
+  elif(method=="braycurtis"):
+    add_lambda=lambda acc, x: acc+x
+    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0]+x_i[1]))
+    
+    return reduce(add_lambda, map(canberra_lambda, zip(coordinate_1, coordinate_2)))
+
   # 2-Norm-based distance
   elif(method=="euclidean"):
     return pNormDistance(coordinate_1, coordinate_2, 2)
   
+  # Squared 2-Norm-based distance
+  elif(method=="sqeuclidean"):
+    return pNormDistance(coordinate_1, coordinate_2, 2) ** 2
+
   # Inf-Norm-based distance
-  elif(method=="max"):
+  elif(method=="max" or method=="chebyshev"):
     return pNormDistance(coordinate_1, coordinate_2, Inf)
 
   # Sphere-based distance
@@ -150,11 +183,27 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
       else ( \
         throw(emsg2, TypeError) if not are_spherical \
         else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
-      ) 
+      )
+  
+  # Sphere-based distance
+  elif(method=="sphere"):
+    are_spherical=isGeographical(coordinate_1) and isSpherical(coordinate_2)
+    has_radius_key=hasKey(methodConfig, "radius")
+
+    emsg1=notification_message.replace("_placeholder_", "radius")
+    emsg2="Provided coordinates are not spherical!"
+    
+    return throw(emsg1, TypeError) if not has_radius_key \
+      else ( \
+        throw(emsg2, TypeError) if not are_spherical \
+        else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
+      )
 
   # Complains on unknown method
   else:
-    emsg="There are only the following methods available: ['pnorm', 'euclidean', 'manhattan', 'max', 'sphere']"
+    methods=['pnorm', 'cosine', 'sqeuclidean', 'euclidean', 'manhattan', 
+             'cityblock', 'max', 'chebyshev', 'sphere']
+    emsg="There are only the following methods available: {methods}".format(methods=str(methods))
     throw(emsg, TypeError)
 
 '''

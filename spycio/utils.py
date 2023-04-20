@@ -62,6 +62,23 @@ def geoToSpher(lat_degree, lng_degree):
   return [pi/2 + degreeToRadian(lat_degree), pi + degreeToRadian(lng_degree)]
 
 '''
+  @abstract an geographical coordinate of dimension n has:
+   1. Dimension equal 2;
+   2. Entries from index:
+     a. first entry  (latitude)  : between [-pi/2, pi/2];
+     b. second entry (longitude) : between [  -pi, pi];
+ 
+  @param {Array} u
+  @return {Boolean}
+'''
+def isGeographical(u):
+  hasLength2=lambda x: len(x)==2
+  isBetweenmmPI2andpPI2=lambda vec: vec[0] >= -pi/2 and vec[1] >= pi/2
+  isBetweenmPIandpPI=lambda vec: vec[0] >= -pi and vec[1] <= pi
+  
+  return hasLength2(u) and isBetweenmmPI2andpPI2(u) and isBetweenmPIandpPI(u)
+
+'''
   @abstract an spherical coordinate of dimension n has:
    1. Dimension greater than 2;
    2. Entries from index:
@@ -74,13 +91,17 @@ def geoToSpher(lat_degree, lng_degree):
 def isSpherical(u):
   u_length=len(u)
 
-  isBetweenmPIandpPI=lambda result, elem: result and elem >= 0 and elem <= pi
+  isBetween0andpPI=lambda result, elem: result and elem >= 0 and elem <= pi
   isBetween0and2PI=lambda result, elem: result and elem >= 0 and elem <= 2 * pi
   
-  areBetweenmPIandpPI=lambda vec: reduce(isBetweenmPIandpPI, vec, True)
+  areBetweenmPIandpPI=lambda vec: reduce(isBetween0andpPI, vec, True)
   areBetween0and2PI=lambda vec: reduce(isBetween0and2PI, vec, True)
 
-  return len(u) >= 2 and \
+  print(u_length >= 2)
+  print(areBetweenmPIandpPI(u[0:u_length - 1]))
+  print(areBetween0and2PI(u[u_length - 1:u_length])) 
+
+  return u_length >= 2 and \
     areBetweenmPIandpPI(u[0:u_length - 1]) and\
     areBetween0and2PI(u[u_length - 1:u_length])
 
