@@ -155,14 +155,14 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   
   # Braycurtis distance
   elif(method=="braycurtis"):
-    add_lambda=lambda acc, x: acc+x
-    braycurtis_numerator_lambda=lambda x_i: abs(x_i[0]-x_i[1])
-    braycurtis_denominator_lambda=lambda x_i: abs(x_i[0]+x_i[1])
+    braycurtis_numerator_lambda=lambda acc, x_i: acc+abs(x_i[0]-x_i[1])
+    braycurtis_denominator_lambda=lambda acc, x_i: acc+abs(x_i[0]+x_i[1])
     
     coords_zip=zip(coordinate_1, coordinate_2)
+    numerator=reduce(braycurtis_numerator_lambda, coords_zip, 0)
 
-    numerator=reduce(braycurtis_numerator_lambda, coords_zip)
-    denominator=reduce(braycurtis_denominator_lambda, coords_zip)
+    coords_zip=zip(coordinate_1, coordinate_2)
+    denominator=reduce(braycurtis_denominator_lambda, coords_zip, 0)
 
     return numerator/denominator
 

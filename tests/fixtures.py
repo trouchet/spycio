@@ -105,7 +105,8 @@ distance_setups_without_config=toParameter(\
     [
         (1, A, B, "manhattan", 2),
         (1, A, B, "euclidean", sqrt(2)),
-        (1, A, B, "max", 1)
+        (1, A, B, "max", 1),
+        (1, A, B, "braycurtis", 1)
     ]
 )
 
