@@ -8,7 +8,7 @@ from numpy import sqrt, Inf, pi
 from spycio.spycio import pNorm, distance, pNormDistance, \
     greatCircleDistance, nSphereDistance, travelTime
 
-from .fixtures import TOL, distance_setups, distance_setups_without_config
+from .fixtures import TOL, distance_setups, distance_setups_without_config, pnorm_fixtures
 
 def test_pNorm():
     coords = [1, 1, 1, 1, 1]
@@ -139,7 +139,7 @@ def test_distance_sphere_error_nonSpherical():
     with raises(TypeError):
         assert distance(coord_1, coord_2, method, config), emsg
 
-@mark.parametrize("exponent,expected_value", [ (1, 2), (2, sqrt(2)), (Inf, 1), ])
+@mark.parametrize(pnorm_fixtures["names"], pnorm_fixtures["variables"])
 def test_distance_pnorm(exponent, expected_value):
     """
     Generates the distance between points

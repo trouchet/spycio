@@ -123,3 +123,5 @@ spher_cartesian_norms=[ 1, 1, 1 ]
 spher_cartesian_tuples=toParameter(\
     "candidate, norm_value", list(zip(spher_cartesian_candidates, spher_cartesian_norms))
 )
+
+pnorm_fixtures=toParameter("exponent,expected_value", [ (1, 2), (2, sqrt(2)), (Inf, 1), ])
