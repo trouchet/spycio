@@ -1,5 +1,5 @@
 """Main module."""
-from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf, dot
+from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf
 from functools import reduce
 from warnings import warn
 
@@ -66,7 +66,12 @@ def sphereCentralAngle(coordinate_1, coordinate_2):
   @return {Number}
 '''
 def cosnuv(u, v, n):
-  return dot(u, v) / (pNorm(u, n) * pNorm(v, n))
+  if(pNorm(u, n)==0 or pNorm(v, n)==0):
+    msg='Method \'cosine\' does not support a null vector.'
+    throw(msg, ZeroDivisionError)
+  
+  else:
+    return dot(u, v) / (pNorm(u, n) * pNorm(v, n))
 
 '''
   @abstract vector argument based on n-norm

@@ -97,8 +97,8 @@ distance_setups=toParameter(\
     ]\
 )
 
-A=[0, 0]
-B=[1, 1]
+A=[1, 1]
+B=[2, 2]
 
 distance_setups_without_config=toParameter(\
     "average_speed,coordinate_1,coordinate_2,method,expected_value",
@@ -106,7 +106,8 @@ distance_setups_without_config=toParameter(\
         (1, A, B, "manhattan", 2),
         (1, A, B, "euclidean", sqrt(2)),
         (1, A, B, "max", 1),
-        (1, A, B, "braycurtis", 1)
+        (1, A, B, "cosine", 2.22e-16),
+        (1, A, B, "braycurtis", 1/3)
     ]
 )
 
