@@ -3,7 +3,7 @@ from math import isclose
 from numpy import pi
 
 from spycio.utils import radianToDegree, degreeToRadian, \
-    geoToSpher, hav, isSpherical, isGeographical, spherToCart
+    geoToSpher, spherToGeo, hav, isSpherical, isGeographical, spherToCart
 from spycio.spycio import pNorm
 
 from .fixtures import TOL
@@ -24,10 +24,19 @@ def test_hav():
 
 @mark.parametrize(geographical_candidate_tuples["names"], geographical_candidate_tuples["variables"])
 def test_geoToSpher(latitude, longitude, spher_coordinates):
-    geocoordinates=geoToSpher(latitude, longitude)
+    result_coordinates=geoToSpher(latitude, longitude)
     
-    assert geocoordinates == spher_coordinates
-    assert isSpherical(geocoordinates) == True
+    assert result_coordinates == spher_coordinates
+    assert isSpherical(result_coordinates) == True
+
+@mark.parametrize(geographical_candidate_tuples["names"], geographical_candidate_tuples["variables"])
+def test_spherToGeo(latitude, longitude, spher_coordinates):
+    latitude_candidate, longitude_candidate=spherToGeo(spher_coordinates)
+    
+    assert latitude_candidate == latitude
+    assert longitude_candidate == longitude
+
+    assert isGeographical([latitude_candidate, longitude_candidate]) == True
 
 @mark.parametrize(spher_cartesian_tuples["names"], spher_cartesian_tuples["variables"])
 def test_spherToCart_candidates(candidate, norm_value):

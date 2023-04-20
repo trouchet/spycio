@@ -3,7 +3,8 @@ from numpy import dot, max, abs, arccos, arcsin, sqrt, Inf, dot
 from functools import reduce
 from warnings import warn
 
-from .utils import hav, spherToCart, isSpherical, isGeographical, throw, hasKey
+from .utils import hav, spherToCart, isSpherical, \
+  isGeographical, throw, hasKey, geoToSpher
 
 '''
   @abstract n-norm of a number
@@ -187,7 +188,7 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   
   # Sphere-based distance
   elif(method=="sphere"):
-    are_spherical=isGeographical(coordinate_1) and isSpherical(coordinate_2)
+    are_spherical=isSpherical(coordinate_1) and isSpherical(coordinate_2)
     has_radius_key=hasKey(methodConfig, "radius")
 
     emsg1=notification_message.replace("_placeholder_", "radius")
@@ -198,11 +199,28 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
         throw(emsg2, TypeError) if not are_spherical \
         else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
       )
+  
+  # Sphere-based distance
+  elif(method=="geographical"):
+    are_geographical=isGeographical(coordinate_1) and isGeographical(coordinate_2)
+    
+    has_radius_key=hasKey(methodConfig, "radius")
+
+    emsg1=notification_message.replace("_placeholder_", "radius")
+    emsg2="Provided coordinates are not geographical!"
+    
+    return throw(emsg1, TypeError) if not has_radius_key \
+      else ( \
+        throw(emsg2, TypeError) if not are_geographical \
+        else nSphereDistance(
+        geoToSpher(coordinate_1), geoToSpher(coordinate_2), methodConfig['radius']
+      ) 
+      )
 
   # Complains on unknown method
   else:
     methods=['pnorm', 'cosine', 'sqeuclidean', 'euclidean', 'manhattan', 
-             'cityblock', 'max', 'chebyshev', 'sphere']
+             'cityblock', 'max', 'chebyshev', 'sphere', 'geographical']
     emsg="There are only the following methods available: {methods}".format(methods=str(methods))
     throw(emsg, TypeError)
 

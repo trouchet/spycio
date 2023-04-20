@@ -62,6 +62,18 @@ def geoToSpher(lat_degree, lng_degree):
   return [pi/2 + degreeToRadian(lat_degree), pi + degreeToRadian(lng_degree)]
 
 '''
+  @abstract convert spherical coordinates into 
+  geographical coordinates a.k.a. latitude and longitude in degrees
+ 
+  @param {Number} lat_degree
+  @param {Number} lng_degree
+  @return {Number}
+'''
+def spherToGeo(coordinates):
+  return radianToDegree(coordinates[0]-pi/2), radianToDegree(coordinates[1]-pi)
+
+
+'''
   @abstract an geographical coordinate of dimension n has:
    1. Dimension equal 2;
    2. Entries from index:
