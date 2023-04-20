@@ -1,7 +1,7 @@
 from numpy import pi, linspace, sqrt, Inf
 from itertools import product
 
-from spycio.utils import spherToCart
+from spycio.utils import spherToCart, spherToGeo
 
 def toParameter(names, variables):
     return {
@@ -89,9 +89,11 @@ distance_setups=toParameter(\
         (1, [1, 1], [2, 2], "pnorm", { "exponent": 2 }, sqrt(2)),
         (1, [1, -1], [2, 2], "pnorm", { "exponent": Inf }, 3),
         (1, [0, 0], [pi / 2, 0], "sphere", { "radius": 1 }, (2 * pi) / 4),
+        (1, spherToGeo([0, 0]), spherToGeo([pi / 2, 0]), "geographical", { "radius": 1 }, (2 * pi) / 4),
         (2, [1, 1], [2, 2], "pnorm", { "exponent": 2 }, sqrt(2) / 2),
         (2, [1, -1], [2, 2], "pnorm", { "exponent": Inf }, 1.5),
-        (2, [0, 0], [pi / 2, 0], "sphere", { "radius": 1 }, (2 * pi) / 8)
+        (2, [0, 0], [pi / 2, 0], "sphere", { "radius": 1 }, (2 * pi) / 8),
+        (2, spherToGeo([0, 0]), spherToGeo([pi / 2, 0]), "geographical", { "radius": 1 }, (2 * pi) / 8),
     ]\
 )
 

@@ -225,18 +225,3 @@ def test_distance_sphere_error_nonSpherical(candidate1,candidate2):
 
     with raises(TypeError):
         assert distance(candidate1, candidate2, method, config)
-
-def test_distance_sphere():
-    """
-    Generates the sphere distance between points
-    """
-    
-    coord_1 = [0, 0]
-    coord_2 = [pi / 2, 0]
-    method="sphere"
-    config={ "radius": 1 }
-    
-    result=distance(coord_1, coord_2, method, config)
-    expected=(2 * pi) / 4
-
-    assert isclose(result, expected, rel_tol=TOL)

@@ -193,20 +193,6 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
       )
   
   # Sphere-based distance
-  elif(method=="sphere"):
-    are_spherical=isSpherical(coordinate_1) and isSpherical(coordinate_2)
-    has_radius_key=hasKey(methodConfig, "radius")
-
-    emsg1=notification_message.replace("_placeholder_", "radius")
-    emsg2="Provided coordinates are not spherical!"
-    
-    return throw(emsg1, TypeError) if not has_radius_key \
-      else ( \
-        throw(emsg2, TypeError) if not are_spherical \
-        else nSphereDistance(coordinate_1, coordinate_2, methodConfig['radius']) \
-      )
-  
-  # Sphere-based distance
   elif(method=="geographical"):
     coordinate_1_is_geographical=isGeographical(coordinate_1)
     coordinate_2_is_geographical=isGeographical(coordinate_2)
@@ -233,7 +219,9 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
       else ( \
         throw(emsg2, TypeError) if not are_geographical \
         else nSphereDistance(
-        geoToSpher(coordinate_1), geoToSpher(coordinate_2), methodConfig['radius']
+        geoToSpher(coordinate_1[0], coordinate_1[1]), \
+        geoToSpher(coordinate_2[0], coordinate_2[1]), \
+        methodConfig['radius']
       ) 
       )
 
