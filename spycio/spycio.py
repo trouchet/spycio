@@ -234,7 +234,9 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   else:
     methods=['pnorm', 'cosine', 'sqeuclidean', 'euclidean', 'manhattan', 
              'cityblock', 'max', 'chebyshev', 'sphere', 'geographical']
-    emsg="There are only the following methods available: {methods}".format(methods=str(methods))
+    emsg="Method \"{method}\" not found among available methods: {methods}".format(\
+      method=method, methods=str(methods)
+    )
     throw(emsg, TypeError)
 
 '''
