@@ -88,10 +88,6 @@ def isGeographical(u):
   isBetweenmmPI2andpPI2=lambda vec: vec[0] >= -90 and vec[0] <= 90
   isBetweenmPIandpPI=lambda vec: vec[1] >= -180 and vec[1] <= 180
   
-  print(hasLength2(u))
-  print(isBetweenmmPI2andpPI2(u))
-  print(isBetweenmPIandpPI(u))
-
   return hasLength2(u) and isBetweenmmPI2andpPI2(u) and isBetweenmPIandpPI(u)
 
 '''
