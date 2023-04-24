@@ -6,7 +6,8 @@ from __future__ import annotations
 
 from .spycio import distance, pNorm, \
     pNormDistance, sphereCentralAngle, centralAngle, \
-    greatCircleDistance, nSphereDistance, travelTime
+    greatCircleDistance, nSphereDistance, travelTime, \
+    isGeographical, isSpherical
 
 from .utils import hav, spherToCart, \
     isSpherical, throw, hasKey
