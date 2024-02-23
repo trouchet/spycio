@@ -27,7 +27,7 @@ def test_geoToSpher(latitude, longitude, spher_coordinates):
     result_coordinates=geoToSpher(latitude, longitude)
     
     assert result_coordinates == spher_coordinates
-    assert isSpherical(result_coordinates) == True
+    assert isSpherical(result_coordinates) 
 
 @mark.parametrize(geographical_candidate_tuples["names"], geographical_candidate_tuples["variables"])
 def test_spherToGeo(latitude, longitude, spher_coordinates):
@@ -36,7 +36,7 @@ def test_spherToGeo(latitude, longitude, spher_coordinates):
     assert latitude_candidate == latitude
     assert longitude_candidate == longitude
 
-    assert isGeographical([latitude_candidate, longitude_candidate]) == True
+    assert isGeographical([latitude_candidate, longitude_candidate]) 
 
 @mark.parametrize(spher_cartesian_tuples["names"], spher_cartesian_tuples["variables"])
 def test_spherToCart_candidates(candidate, norm_value):
@@ -51,16 +51,16 @@ def test_spherToCart(candidate):
 
 @mark.parametrize(spherical_coordinates["names"], spherical_coordinates["variables"])
 def test_isSpherical_batch(coordinates):
-    assert isSpherical(coordinates) == True
+    assert isSpherical(coordinates) 
 
 @mark.parametrize(non_spherical_candidates["names"], non_spherical_candidates["variables"])
 def test_not_isSpherical(candidate):
-    assert isSpherical(candidate) == False
+    assert isSpherical(candidate) is False
 
 @mark.parametrize(non_geographical_candidates["names"], non_geographical_candidates["variables"])
 def test_isGeographical_batch(coordinates):
-    assert isGeographical(coordinates) == False
+    assert isGeographical(coordinates) is False
 
 @mark.parametrize(geographical_coordinates["names"], geographical_coordinates["variables"])
 def test_isGeographical_batch(coordinates):
-    assert isGeographical(coordinates) == True
+    assert isGeographical(coordinates) 

@@ -84,9 +84,12 @@ def spherToGeo(coordinates):
   @return {Boolean}
 '''
 def isGeographical(u):
-  hasLength2=lambda x: len(x)==2
-  isBetweenmmPI2andpPI2=lambda vec: vec[0] >= -90 and vec[0] <= 90
-  isBetweenmPIandpPI=lambda vec: vec[1] >= -180 and vec[1] <= 180
+  def hasLength2(x):
+    return (len(x) == 2)
+  def isBetweenmmPI2andpPI2(vec):
+    return (vec[0] >= -90 and vec[0] <= 90)
+  def isBetweenmPIandpPI(vec):
+    return (vec[1] >= -180 and vec[1] <= 180)
   
   return hasLength2(u) and isBetweenmmPI2andpPI2(u) and isBetweenmPIandpPI(u)
 
@@ -103,11 +106,15 @@ def isGeographical(u):
 def isSpherical(u):
   u_length=len(u)
 
-  isBetween0andpPI=lambda result, elem: result and elem >= 0 and elem <= pi
-  isBetween0and2PI=lambda result, elem: result and elem >= 0 and elem <= 2 * pi
+  def isBetween0andpPI(result, elem):
+    return (result and elem >= 0 and elem <= pi)
+  def isBetween0and2PI(result, elem):
+    return (result and elem >= 0 and elem <= 2 * pi)
   
-  areBetweenmPIandpPI=lambda vec: reduce(isBetween0andpPI, vec, True)
-  areBetween0and2PI=lambda vec: reduce(isBetween0and2PI, vec, True)
+  def areBetweenmPIandpPI(vec):
+    return reduce(isBetween0andpPI, vec, True)
+  def areBetween0and2PI(vec):
+    return reduce(isBetween0and2PI, vec, True)
 
   return u_length >= 2 and \
     areBetweenmPIandpPI(u[0:u_length - 1]) and\
@@ -127,7 +134,8 @@ def spherToCart(coords, R):
   if(isSpherical(coords)):
     
     def prodsin(angles): 
-      sinprodFun = lambda prod_sofar, angle: prod_sofar * sin(angle)
+      def sinprodFun(prod_sofar, angle):
+        return (prod_sofar * sin(angle))
       return 1 if len(angles) == 0 else reduce(sinprodFun, angles, 1)
 
     def s2cRecur(angles, index):
@@ -138,7 +146,8 @@ def spherToCart(coords, R):
     curr_coord = coords[len_coords - 1]
     last_coord = [R * prodsin(prev_coords) * sin(curr_coord)]
     
-    spherDistFun = lambda index: R * s2cRecur(coords, index)  
+    def spherDistFun(index):
+      return (R * s2cRecur(coords, index))  
     
     prev_sphers=list(map(spherDistFun, indexes))
     prev_sphers.extend(last_coord)
@@ -153,8 +162,7 @@ def spherToCart(coords, R):
     criterium_3='3. Last element must be between 0 and 2*pi.'
 
     emsg='These are criteria for input to be spherical: \n{criteria[0]}\n {criteria[1]} \n'.format(\
-      first=0, blast=len_coords - 1, last=len_coords, \
-        criteria=[criterium_1, criterium_2, criterium_3] \
+      criteria=[criterium_1, criterium_2, criterium_3] \
     )
     
     throw(emsg, TypeError)

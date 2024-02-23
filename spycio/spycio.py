@@ -14,7 +14,8 @@ from .utils import hav, spherToCart, isSpherical, \
   @return {Number}
 '''
 def pNorm(arr, p):
-  pNormFun=lambda dist, elem: dist + abs(elem) ** p
+  def pNormFun(dist, elem):
+    return (dist + abs(elem) ** p)
   return reduce(pNormFun, arr, 0) ** (1 / p)
 
 '''
@@ -29,7 +30,8 @@ def pNormDistance(coordinate_1, coordinate_2, p):
   if (p < 1):
     throw("The exponent n must be a number greater or equal to 1!")
 
-  diffAbsFun=lambda coords: abs(coords[0] - coords[1])
+  def diffAbsFun(coords):
+    return abs(coords[0] - coords[1])
   coordiff=list(map(diffAbsFun, zip(coordinate_1, coordinate_2)))
 
   return max(coordiff) if p == Inf else pNorm(coordiff, p)
@@ -153,15 +155,19 @@ def distance(coordinate_1, coordinate_2, method="euclidean", methodConfig={}):
   
   # Canberra distance
   elif(method=="canberra"):
-    add_lambda=lambda acc, x: acc+x
-    canberra_lambda=lambda x_i: (abs(x_i[0]-x_i[1]))/(abs(x_i[0])+abs(x_i[1]))
+    def add_lambda(acc, x):
+      return (acc + x)
+    def canberra_lambda(x_i):
+      return (abs(x_i[0] - x_i[1]) / (abs(x_i[0]) + abs(x_i[1])))
     
     return reduce(add_lambda, map(canberra_lambda, zip(coordinate_1, coordinate_2)))
   
   # Braycurtis distance
   elif(method=="braycurtis"):
-    braycurtis_numerator_lambda=lambda acc, x_i: acc+abs(x_i[0]-x_i[1])
-    braycurtis_denominator_lambda=lambda acc, x_i: acc+abs(x_i[0]+x_i[1])
+    def braycurtis_numerator_lambda(acc, x_i):
+      return (acc + abs(x_i[0] - x_i[1]))
+    def braycurtis_denominator_lambda(acc, x_i):
+      return (acc + abs(x_i[0] + x_i[1]))
     
     coords_zip=zip(coordinate_1, coordinate_2)
     numerator=reduce(braycurtis_numerator_lambda, coords_zip, 0)

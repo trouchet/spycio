@@ -4,12 +4,7 @@
 
 from __future__ import annotations
 
-from .spycio import distance, pNorm, \
-    pNormDistance, sphereCentralAngle, centralAngle, \
-    greatCircleDistance, nSphereDistance, travelTime
 
-from .utils import hav, spherToCart, spherToGeo, geoToSpher, \
-    isSpherical, isGeographical, throw, hasKey
     
 
 __author__ = """Bruno Peixoto"""
